@@ -485,3 +485,23 @@ class TestPlainXComArgResolveLoopTask:
 
         assert resolved == "value"
         assert isinstance(mock_supervisor_comms.send.call_args.args[0], GetXCom)
+
+
+class _ValueOperator(BaseOperator):
+    def __init__(self, *, value=None, **kwargs):
+        super().__init__(**kwargs)
+        self.value = value
+
+
+def test_output_is_subscriptable_plain_xcom_arg():
+    with DAG("test_output_is_subscriptable_plain_xcom_arg"):
+        unmapped = _ValueOperator(task_id="unmapped")
+        mapped = _ValueOperator.partial(task_id="mapped").expand(value=[1, 2])
+
+    for task in (unmapped, mapped):
+        output = task.output
+        assert isinstance(output, PlainXComArg)
+        item = output["some_key"]
+        assert isinstance(item, PlainXComArg)
+        assert item.operator is task
+        assert item.key == "some_key"

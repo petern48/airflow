@@ -214,7 +214,7 @@ class PlainXComArg(XComArg):
     operator: Operator
     key: str = BaseXCom.XCOM_RETURN_KEY
 
-    def __getitem__(self, item: str) -> XComArg:
+    def __getitem__(self, item: str) -> PlainXComArg:
         """Implement xcomresult['some_result_key']."""
         if not isinstance(item, str):
             raise ValueError(f"XComArg only supports str lookup, received {type(item).__name__}")

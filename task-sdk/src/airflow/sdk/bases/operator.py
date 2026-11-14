@@ -96,7 +96,7 @@ if TYPE_CHECKING:
     from airflow.sdk.definitions.operator_resources import Resources
     from airflow.sdk.definitions.retry_policy import RetryPolicy
     from airflow.sdk.definitions.taskgroup import TaskGroup
-    from airflow.sdk.definitions.xcom_arg import XComArg
+    from airflow.sdk.definitions.xcom_arg import PlainXComArg
     from airflow.sdk.types import WeightRuleParam
     from airflow.triggers.base import BaseTrigger, StartTriggerArgs
 
@@ -1536,11 +1536,11 @@ class BaseOperator(AbstractOperator, metaclass=BaseOperatorMeta):
         return [self]
 
     @property
-    def output(self) -> XComArg:
+    def output(self) -> PlainXComArg:
         """Returns reference to XCom pushed by current operator."""
-        from airflow.sdk.definitions.xcom_arg import XComArg
+        from airflow.sdk.definitions.xcom_arg import PlainXComArg
 
-        return XComArg(operator=self)
+        return PlainXComArg(operator=self)
 
     @classmethod
     def get_serialized_fields(cls):

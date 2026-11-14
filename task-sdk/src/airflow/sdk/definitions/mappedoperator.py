@@ -59,7 +59,7 @@ if TYPE_CHECKING:
     import jinja2  # Slow import.
     import pendulum
 
-    from airflow.sdk import DAG, BaseOperator, BaseOperatorLink, Context, TaskGroup, TriggerRule, XComArg
+    from airflow.sdk import DAG, BaseOperator, BaseOperatorLink, Context, TaskGroup, TriggerRule
     from airflow.sdk.definitions._internal.expandinput import (
         ExpandInput,
         OperatorExpandArgument,
@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     from airflow.sdk.definitions.operator_resources import Resources
     from airflow.sdk.definitions.param import ParamsDict
     from airflow.sdk.definitions.retry_policy import RetryPolicy
+    from airflow.sdk.definitions.xcom_arg import PlainXComArg
     from airflow.sdk.types import WeightRuleParam
     from airflow.triggers.base import StartTriggerArgs
 
@@ -735,11 +736,11 @@ class MappedOperator(AbstractOperator):
         return self.dag
 
     @property
-    def output(self) -> XComArg:
+    def output(self) -> PlainXComArg:
         """Return reference to XCom pushed by current operator."""
-        from airflow.sdk.definitions.xcom_arg import XComArg
+        from airflow.sdk.definitions.xcom_arg import PlainXComArg
 
-        return XComArg(operator=self)
+        return PlainXComArg(operator=self)
 
     def serialize_for_task_group(self) -> tuple[DagAttributeTypes, Any]:
         """Implement DAGNode."""
